@@ -1,36 +1,37 @@
 #!/usr/bin/python2.7
+
+import argparse
+from collections import defaultdict
 """ Create an LCA Matrix representing node ancestors """
 
-class Node:
-    "Represents a node in a binary tree"
-    def __init__(self, data):
-        self.left = None
-        self.right = None
-        self.parent = None
-        self.data = data # A list that contains all child nodes
-
-    def private(self):
-        """ This """
-        pass
-
-    def insert_node(self):
-        """ THIS """
-
-
-class lcaMatrix:
-    """ Compute the LCA matrix """
-    def __init__(self, root):
-        self.root = root
-
-    def parse_input(self):
-        pass
-
-    
-
-
 def main():
-    print "hi"
+    parser = argparse.ArgumentParser()
+    parser.add_argument('input_file', metavar='f', help='input file', nargs='+')
+    args = parser.parse_args()
+
+    f = open(args.input_file[0], "r")
+    
+    matrix = []
+
+    nodes = defaultdict(list)
+
+    i = 0
+
+    for line in f:
+        info = line.split()
+        matrix.append([])
+        children = info[1].split(',')
+        if len(children) >= 2:
+            left = children[0][1:]
+            right = children[1][:1]
+            nodes[int(info[0])].append(left)
+            nodes[int(info[0])].append(right)
+        # TODO: what to do with parent nodes?
+
+        i += 1
+
+    print nodes
 
 
-
-main()
+if __name__ == '__main__':
+    main()
