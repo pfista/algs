@@ -11,17 +11,27 @@ class DisjointSet():
 
     def __init__(self):
         self.parents = {}
+        self.rank = {}
         pass
 
     def make_set(self, x):
         """ Make a set for a single object """
         self.parents[x] = x
+        self.rank[x] = 0
 
     def find(self, vertex):
-        pass
+        if self.parents[vertex] != vertex:
+            self.parents[vertex] = self.find(self.parents[vertex])
+        return self.parents[vertex]
 
     def union(self, u, v):
-        pass
+        if self.rank[u] < self.rank[v]:
+            self.parents[u] = self.parents[v] # Add u to v's set
+        elif self.rank[u] > self.rank[v]:
+            self.parents[v] = self.parents[u] # Add v to u's set
+        else:
+            self.parents[v] = self.parents[u]
+            self.rank[u] += 1 # Increase u's rank
 
     def __repr__(self):
         return str(self.parents)
@@ -58,7 +68,6 @@ def main():
     # Parse the data into an edge and vertex list
     for line in lines:
         data = map(int, re.findall('\d+', line))
-        print data
         vertices.append(data[0])
         for i in range(1, len(data)-1, 2):
             edges.append(Edge(data[0], data[i], data[i+1]))
@@ -79,7 +88,26 @@ def main():
             mst.append(edges[i])
             ds.union(edges[i].u, edges[i].v)
 
-    print mst
+    # Create the required formatted output for the MST
+    out = [[]for x in xrange(len(vertices))]
+
+    for edge in edges:
+        out[edge.u-1].append(edge.v)
+        out[edge.u-1] = sorted(out[edge.u-1])
+
+    # Output resulting LCA matrix to file
+    output = open("output.txt", 'w')
+    for i in range(len(out)):
+        output.write(str(i+1)+" (")
+        last = 0
+        for j in out[i]:
+            s = str(j)
+            if last != len(out[i])-1:
+                s += ','
+            last += 1
+            output.write(s)
+        output.write(')\n')
+    output.close()
 
 if __name__ == '__main__':
     main()
