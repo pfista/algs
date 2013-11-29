@@ -21,6 +21,11 @@ class Edge():
     def __repr__(self):
         return "["+ str(self.u) + ","+ str(self.v)+ "]"
 
+def fail(reason):
+    output = open("output.txt", 'w')
+    output.write(reason)
+    output.close()
+
 def main():
     """ Parse file input, find a Eulerian tour if it exists """
     parser = argparse.ArgumentParser()
@@ -42,6 +47,7 @@ def main():
 
         if (len(edge_endpoints)%2 != 0):
             print "No tour exists, node has odd degree"
+            fail("-1")
             return
 
         for v in edge_endpoints:
@@ -71,6 +77,7 @@ def main():
 
     if tour[0] != tour[-1]:
         print "No tour found"
+        fail("-1")
     else:
         print "Saving tour to output.txt"
         # Output resulting LCA matrix to file
@@ -81,7 +88,6 @@ def main():
             if (last != len(tour) -1):
                 output.write(' ')
             last += 1
-
         output.close()
 
 if __name__ == '__main__':
