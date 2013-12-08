@@ -11,7 +11,7 @@ int max_removable(vector<vector<int> > neighbors, vector<int> cover);
 vector<int> procedure_1(vector<vector<int> > neighbors, vector<int> cover);
 vector<int> procedure_2(vector<vector<int> > neighbors, vector<int> cover, int k);
 int cover_size(vector<int> cover);
-ifstream infile ("d_tutte_graph.txt");
+ifstream infile ("d_witzel_graph.txt");
 ofstream outfile ("sets.txt");
 
 int main()
@@ -50,87 +50,89 @@ int main()
  bool found=false;
  cout<<"Finding Independent Sets..."<<endl;
 
+
+
  auto start = std::chrono::high_resolution_clock::now();
 
- min=n+1;
- vector<vector<int> > covers;
- vector<int> allcover;
- for(i=0; i<graph.size(); i++)
- allcover.push_back(1);
- for(i=0; i<allcover.size(); i++)
- {
-  if(found) break;
-  counter++; cout<<counter<<". ";  outfile<<counter<<". ";
-  vector<int> cover=allcover;
-  cover[i]=0;
-  cover=procedure_1(neighbors,cover);
-  s=cover_size(cover);
-  if(s<min) min=s;
-  if(s<=k)
-  {
-   outfile<<"Independent Set ("<<n-s<<"): ";
-   for(j=0; j<cover.size(); j++) if(cover[j]==0) outfile<<j+1<<" ";
-   outfile<<endl;
-   cout<<"Independent Set Size: "<<n-s<<endl;
-   covers.push_back(cover);
-   found=true;
-   break;
-  }
-  for(j=0; j<n-k; j++)
-  cover=procedure_2(neighbors,cover,j);
-  s=cover_size(cover);
-  if(s<min) min=s;
-  outfile<<"Independent Set ("<<n-s<<"): ";
-  for(j=0; j<cover.size(); j++) if(cover[j]==0) outfile<<j+1<<" ";
-  outfile<<endl;
-  cout<<"Independent Set Size: "<<n-s<<endl;
-  covers.push_back(cover);
-  if(s<=k){ found=true; break; }
- }
-//Pairwise Intersections
- for(p=0; p<covers.size(); p++)
- {
-  if(found) break;
-  for(q=p+1; q<covers.size(); q++)
-  {
-   if(found) break;
-   counter++; cout<<counter<<". ";  outfile<<counter<<". ";
-   vector<int> cover=allcover;
-   for(r=0; r<cover.size(); r++)
-   if(covers[p][r]==0 && covers[q][r]==0) cover[r]=0;
-   cover=procedure_1(neighbors,cover);
-   s=cover_size(cover);
-   if(s<min) min=s;
-   if(s<=k)
-   {
-    outfile<<"Independent Set ("<<n-s<<"): ";
-    for(j=0; j<cover.size(); j++) if(cover[j]==0) outfile<<j+1<<" ";
-    outfile<<endl;
-    cout<<"Independent Set Size: "<<n-s<<endl;
-    found=true;
-    break;
-   }
-   for(j=0; j<k; j++)
-   cover=procedure_2(neighbors,cover,j);
-   s=cover_size(cover);
-   if(s<min) min=s;
-   outfile<<"Independent Set ("<<n-s<<"): ";
-   for(j=0; j<cover.size(); j++) if(cover[j]==0) outfile<<j+1<<" ";
-   outfile<<endl;
-   cout<<"Independent Set Size: "<<n-s<<endl;
-   if(s<=k){ found=true; break; }
-   }
- }
+     min=n+1;
+     vector<vector<int> > covers;
+     vector<int> allcover;
+     for(i=0; i<graph.size(); i++)
+     allcover.push_back(1);
+     for(i=0; i<allcover.size(); i++)
+     {
+      if(found) break;
+      counter++; cout<<counter<<". "; outfile<<counter<<". ";
+      vector<int> cover=allcover;
+      cover[i]=0;
+      cover=procedure_1(neighbors,cover);
+      s=cover_size(cover);
+      if(s<min) min=s;
+      if(s<=k)
+      {
+       outfile<<"Independent Set ("<<n-s<<"): ";
+       for(j=0; j<cover.size(); j++) if(cover[j]==0) outfile<<j+1<<" ";
+       outfile<<endl;
+       cout<<"Independent Set Size: "<<n-s<<endl;
+       covers.push_back(cover);
+       found=true;
+       break;
+      }
+      for(j=0; j<n-k; j++)
+      cover=procedure_2(neighbors,cover,j);
+      s=cover_size(cover);
+      if(s<min) min=s;
+      outfile<<": Independent Set ("<<n-s<<"): ";
+      for(j=0; j<cover.size(); j++) if(cover[j]==0) outfile<<j+1<<" ";
+      outfile<<endl;
+      cout<<"Independent Set Size: "<<n-s<<endl;
+      covers.push_back(cover);
+      if(s<=k){ found=true; break; }
+     }
+    //Pairwise Intersections
+     for(p=0; p<covers.size(); p++)
+     {
+      if(found) break;
+      for(q=p+1; q<covers.size(); q++)
+      {
+       if(found) break;
+       counter++; cout<<counter<<". "; outfile<<counter<<". ";
+       vector<int> cover=allcover;
+       for(r=0; r<cover.size(); r++)
+       if(covers[p][r]==0 && covers[q][r]==0) cover[r]=0;
+       cover=procedure_1(neighbors,cover);
+       s=cover_size(cover);
+       if(s<min) min=s;
+       if(s<=k)
+       {
+        outfile<<": Independent Set ("<<n-s<<"): ";
+        for(j=0; j<cover.size(); j++) if(cover[j]==0) outfile<<j+1<<" ";
+        outfile<<endl;
+        cout<<"Independent Set Size: "<<n-s<<endl;
+        found=true;
+        break;
+       }
+       for(j=0; j<k; j++)
+       cover=procedure_2(neighbors,cover,j);
+       s=cover_size(cover);
+       if(s<min) min=s;
+       outfile<<"Independent Set ("<<n-s<<"): ";
+       for(j=0; j<cover.size(); j++) if(cover[j]==0) outfile<<j+1<<" ";
+       outfile<<endl;
+       cout<<"Independent Set Size: "<<n-s<<endl;
+       if(s<=k){ found=true; break; }
+       }
+     }
 
  auto end = std::chrono::high_resolution_clock::now();
  auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-
  cout << "Time elapsed " << elapsed.count()<< " ms"<<endl;
 
  if(found) cout<<"Found Independent Set of size at least "<<K<<"."<<endl;
  else cout<<"Could not find Independent Set of size at least "<<K<<"."<<endl
  <<"Maximum Independent Set size found is "<<n-min<<"."<<endl;
  cout<<"See sets.txt for results."<<endl;
+
  return 0;
 }
 
