@@ -10,7 +10,7 @@ int max_removable(vector<vector<int> > neighbors, vector<int> cover);
 vector<int> procedure_1(vector<vector<int> > neighbors, vector<int> cover);
 vector<int> procedure_2(vector<vector<int> > neighbors, vector<int> cover, int k);
 int cover_size(vector<int> cover);
-ifstream infile ("w_graph.txt");
+ifstream infile ("d_witzel_graph.txt");
 ofstream outfile ("sets.txt");
 
 int main()
