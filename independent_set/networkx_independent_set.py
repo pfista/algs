@@ -12,14 +12,16 @@ def main():
 
     G = nx.read_adjlist(args.input_file[0])
 
-    nx.draw(G)
+    #nx.draw(G)
 
-    plt.show()
-    plt.savefig("path.png")
+    #plt.show()
+    #plt.savefig("path.png")
 
     S = maximum_independent_set(G)
+    I = maximal_independent_set(G)
 
     print S
+    print I
 
 
 if __name__ == '__main__':

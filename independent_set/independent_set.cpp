@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <cstdlib>
+#include <chrono>
 using namespace std;
 
 bool removable(vector<int> neighbor, vector<int> cover);
@@ -10,7 +11,7 @@ int max_removable(vector<vector<int> > neighbors, vector<int> cover);
 vector<int> procedure_1(vector<vector<int> > neighbors, vector<int> cover);
 vector<int> procedure_2(vector<vector<int> > neighbors, vector<int> cover, int k);
 int cover_size(vector<int> cover);
-ifstream infile ("d_witzel_graph.txt");
+ifstream infile ("d_tutte_graph.txt");
 ofstream outfile ("sets.txt");
 
 int main()
@@ -30,6 +31,8 @@ int main()
   }
   graph.push_back(row);
  }
+
+
  //Find Neighbors
  vector<vector<int> > neighbors;
  for(i=0; i<graph.size(); i++)
@@ -46,6 +49,9 @@ int main()
  //Find Independent Sets
  bool found=false;
  cout<<"Finding Independent Sets..."<<endl;
+
+ auto start = std::chrono::high_resolution_clock::now();
+
  min=n+1;
  vector<vector<int> > covers;
  vector<int> allcover;
@@ -115,11 +121,16 @@ int main()
    if(s<=k){ found=true; break; }
    }
  }
+
+ auto end = std::chrono::high_resolution_clock::now();
+ auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+
+ cout << "Time elapsed " << elapsed.count()<< " ms"<<endl;
+
  if(found) cout<<"Found Independent Set of size at least "<<K<<"."<<endl;
  else cout<<"Could not find Independent Set of size at least "<<K<<"."<<endl
  <<"Maximum Independent Set size found is "<<n-min<<"."<<endl;
  cout<<"See sets.txt for results."<<endl;
- system("PAUSE");
  return 0;
 }
 
